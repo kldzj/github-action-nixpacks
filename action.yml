@@ -7,29 +7,29 @@ branding:
 
 inputs:
   tags:
-    description: "List of tags to apply to the built image"
-    required: false
+    description: 'List of tags to apply to the built image'
+    required: true
   labels:
-    description: "List of metadata for an image"
+    description: 'List of metadata for an image'
     required: false
   platforms:
-    description: "List of target platforms for the build"
+    description: 'List of target platforms for the build'
     required: false
   context:
     description: "Build's context is the set of files located in the specified PATH"
     required: true
-    default: "."
+    default: '.'
   pkgs:
-    description: "Provide additional nix packages to install in the environment"
+    description: 'Provide additional nix packages to install in the environment'
     required: false
   apt:
-    description: "Provide additional apt packages to install in the environment"
+    description: 'Provide additional apt packages to install in the environment'
     required: false
   env:
-    description: "Provide additional environment variables to set"
+    description: 'Provide additional environment variables to set'
     required: false
   push:
-    description: "Boolean to determine if the built image should be pushed"
+    description: 'Boolean to determine if the built image should be pushed'
     required: false
     default: 'false'
 
@@ -58,13 +58,3 @@ runs:
         INPUT_APT: ${{ inputs.apt }}
         INPUT_PUSH: ${{ inputs.push }}
         INPUT_ENV: ${{ inputs.env }}
-
-        # raw SHA of the commit which triggered the workflow
-        GIT_SHA: ${{ github.sha }}
-        # username/repo
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        # github.com/username/repo
-        GITHUB_REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}
-        # for author extraction
-        GH_TOKEN: ${{ github.token }}
-

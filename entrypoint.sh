@@ -7,69 +7,15 @@ if ! command -v nixpacks &>/dev/null; then
   curl -sSL https://nixpacks.com/install.sh | bash
 fi
 
-repository_author() {
-  local repo=$1
-  local owner_login owner_name owner_email owner_info
-
-  if [ -z "$repo" ]; then
-    echo "Error: Repository not specified."
-    return 1
-  fi
-
-  # Fetch the owner's login (username)
-  owner_login=$(gh repo view "$repo" --json owner --jq '.owner.login' | tr -d '[:space:]')
-
-  # Fetch the owner's name, remove trailing and leading whitespace
-  owner_name=$(gh api "users/$owner_login" --jq '.name' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-
-  # Attempt to fetch the owner's publicly available email
-  owner_email=$(gh api "users/$owner_login" --jq '.email' | tr -d '[:space:]')
-
-  # Check if an email was fetched; if not, use just the name
-  if [ -z "$owner_email" ] || [ "$owner_email" = "null" ]; then
-    owner_info="$owner_name"
-  else
-    owner_info="$owner_name <$owner_email>"
-  fi
-
-  echo "$owner_info"
-}
-
-repository_license() {
-  local repo=$1
-  gh api /repos/iloveitaly/dotfiles/license 2>/dev/null | jq -r '.license.key // ""'
-}
-
 BUILD_CMD="nixpacks build $INPUT_CONTEXT"
-GHCR_IMAGE_NAME="ghcr.io/$GITHUB_REPOSITORY"
 
 # Incorporate provided input parameters from actions.yml into the Nixpacks build command
 if [ -n "${INPUT_TAGS}" ]; then
   read -ra TAGS <<<"$(echo "$INPUT_TAGS" | tr ',\n' ' ')"
-else
-  # if not tags are provided, assume ghcr.io as the default registry
-  echo "No tags provided. Defaulting to ghcr.io registry."
-  BUILD_DATE_TIMESTAMP=$(date +%s)
-  TAGS=("$GHCR_IMAGE_NAME:$GIT_SHA" "$GHCR_IMAGE_NAME:latest" "$GHCR_IMAGE_NAME:$BUILD_DATE_TIMESTAMP")
 fi
 
 if [ -n "${INPUT_LABELS}" ]; then
   read -ra LABELS <<<"$(echo "$INPUT_LABELS" | tr ',\n' ' ')"
-fi
-
-# TODO should check if these labels are already defined
-LABELS+=("org.opencontainers.image.source=$GITHUB_REPOSITORY_URL")
-LABELS+=("org.opencontainers.image.revision=$GITHUB_SHA")
-LABELS+=("org.opencontainers.image.created=\"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"")
-
-REPO_AUTHOR=$(repository_author "$GITHUB_REPOSITORY")
-if [ -n "$REPO_AUTHOR" ]; then
-  LABELS+=("org.opencontainers.image.authors=\"$REPO_AUTHOR\"")
-fi
-
-REPO_LICENSE=$(repository_license "$GITHUB_REPOSITORY")
-if [ -n "$REPO_LICENSE" ]; then
-  LABELS+=("org.opencontainers.image.licenses=\"$REPO_LICENSE\"")
 fi
 
 # TODO add the description label as well? Does this add any value?
@@ -177,7 +123,7 @@ function build_and_push_multiple_architectures() {
 
 if [ "${#PLATFORMS[@]}" -gt 1 ]; then
   build_and_push_multiple_architectures
-elif [ -n "$PLATFORMS" ]; then
+else
   build_and_push
 fi
 
