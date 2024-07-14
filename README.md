@@ -18,6 +18,7 @@ It's very opinionated out the box (as software should be!) but allows you to cus
 - `labels`: An optional, comma-separated list of metadata labels to add to the image.
 - `platforms`: An optional, comma-separated list of target platforms for the build.
 - `pkgs`: Optional additional Nix packages to install in the environment.
+- `libs`: Optional additional libraries to install in the environment.
 - `apt`: Optional additional Apt packages to install in the environment.
 - `install-cmd`: Optional command to install dependencies. Automatically detected if not provided.
 - `build-cmd`: Optional command to build the application. Automatically detected if not provided.

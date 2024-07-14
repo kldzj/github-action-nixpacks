@@ -22,6 +22,9 @@ inputs:
   pkgs:
     description: 'Provide additional nix packages to install in the environment'
     required: false
+  libs:
+    description: 'Provide additional libraries to install in the environment'
+    required: false
   apt:
     description: 'Provide additional apt packages to install in the environment'
     required: false
@@ -64,6 +67,7 @@ runs:
         INPUT_PLATFORMS: ${{ inputs.platforms }}
         INPUT_CONTEXT: ${{ inputs.context }}
         INPUT_PKGS: ${{ inputs.pkgs }}
+        INPUT_LIBS: ${{ inputs.libs }}
         INPUT_APT: ${{ inputs.apt }}
         INPUT_PUSH: ${{ inputs.push }}
         INPUT_ENV: ${{ inputs.env }}

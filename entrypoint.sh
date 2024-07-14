@@ -29,6 +29,11 @@ if [ -n "${INPUT_PKGS}" ]; then
   BUILD_CMD="$BUILD_CMD --pkgs '${PKGS_ARR[*]}'"
 fi
 
+if [ -n "${INPUT_LIBS}" ]; then
+  read -ra LIBS_ARR <<<"$(echo "$INPUT_LIBS" | tr ',\n' ' ')"
+  BUILD_CMD="$BUILD_CMD --libs '${LIBS_ARR[*]}'"
+fi
+
 if [ -n "${INPUT_APT}" ]; then
   read -ra APT_ARR <<<"$(echo "$INPUT_APT" | tr ',\n' ' ')"
   BUILD_CMD="$BUILD_CMD --apt '${APT_ARR[*]}'"
