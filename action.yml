@@ -25,6 +25,15 @@ inputs:
   apt:
     description: 'Provide additional apt packages to install in the environment'
     required: false
+  install-cmd:
+    description: 'Override the install command'
+    required: false
+  build-cmd:
+    description: 'Override the build command'
+    required: false
+  start-cmd:
+    description: 'Override the start command'
+    required: false
   env:
     description: 'Provide additional environment variables to set'
     required: false
@@ -58,3 +67,6 @@ runs:
         INPUT_APT: ${{ inputs.apt }}
         INPUT_PUSH: ${{ inputs.push }}
         INPUT_ENV: ${{ inputs.env }}
+        INPUT_INSTALL_CMD: ${{ inputs.install-cmd }}
+        INPUT_BUILD_CMD: ${{ inputs.build-cmd }}
+        INPUT_START_CMD: ${{ inputs.start-cmd }}

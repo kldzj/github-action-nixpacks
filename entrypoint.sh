@@ -51,6 +51,18 @@ if [ "${#PLATFORMS[@]}" -gt 1 ] && [ "$INPUT_PUSH" != "true" ]; then
   exit 1
 fi
 
+if [ -n "$INPUT_INSTALL_CMD" ]; then
+  BUILD_CMD="$BUILD_CMD --install-cmd \"$INPUT_INSTALL_CMD\""
+fi
+
+if [ -n "$INPUT_BUILD_CMD" ]; then
+  BUILD_CMD="$BUILD_CMD --build-cmd \"$INPUT_BUILD_CMD\""
+fi
+
+if [ -n "$INPUT_START_CMD" ]; then
+  BUILD_CMD="$BUILD_CMD --start-cmd \"$INPUT_START_CMD\""
+fi
+
 function build_and_push() {
   local build_cmd=$BUILD_CMD
 

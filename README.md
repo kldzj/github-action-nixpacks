@@ -19,6 +19,9 @@ It's very opinionated out the box (as software should be!) but allows you to cus
 - `platforms`: An optional, comma-separated list of target platforms for the build.
 - `pkgs`: Optional additional Nix packages to install in the environment.
 - `apt`: Optional additional Apt packages to install in the environment.
+- `install-cmd`: Optional command to install dependencies. Automatically detected if not provided.
+- `build-cmd`: Optional command to build the application. Automatically detected if not provided.
+- `start-cmd`: Optional command to start the application. Automatically detected if not provided.
 - `push`: A boolean flag to indicate whether to push the built image to the registry. Default is `false`. Required for multi-architecture builds.
 - `env`: Optional environment variables to set during the build.
 
@@ -27,17 +30,17 @@ It's very opinionated out the box (as software should be!) but allows you to cus
 [Here's an example of this workflow in a live project:](https://github.com/iloveitaly/github-overlord/blob/master/.github/workflows/build_and_publish.yml)
 
 ```yaml
-  - name: Build and push Docker images
-    uses: iloveitaly/github-action-nixpacks@main
-    with:
-      push: true
+- name: Build and push Docker images
+  uses: kldzj/github-action-nixpacks@main
+  with:
+    push: true
 ```
 
 Multi-architecture builds are easy:
 
 ```yaml
 - name: Build and push Docker images
-  uses: iloveitaly/github-action-nixpacks@main
+  uses: kldzj/github-action-nixpacks@main
   with:
     platforms: "linux/amd64,linux/arm64"
     push: true
@@ -78,7 +81,7 @@ jobs:
         run: echo "DATE_STAMP=$(date +%s)" > "$GITHUB_ENV"
 
       - name: Build and push Docker images
-        uses: iloveitaly/github-action-nixpacks@main
+        uses: kldzj/github-action-nixpacks@main
         with:
           push: true
           tags: |
@@ -94,6 +97,6 @@ These are tricky and not supported by nixpacks by default. This action makes it 
 
 Some things to keep in mind:
 
-* `push` is required when building for multiple architectures.
-* For each platform, an auto-generated tag is generated and pushed.
-* There are some [TODOs](/TODO) that I won't get to until I need them.
+- `push` is required when building for multiple architectures.
+- For each platform, an auto-generated tag is generated and pushed.
+- There are some [TODOs](/TODO) that I won't get to until I need them.
