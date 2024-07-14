@@ -63,6 +63,17 @@ if [ -n "$INPUT_START_CMD" ]; then
   BUILD_CMD="$BUILD_CMD --start-cmd \"$INPUT_START_CMD\""
 fi
 
+function get_image_names() {
+  local image_names=()
+  for tag in "${TAGS[@]}"; do
+    local image_name="${tag%:*}"
+    if [[ ! " ${image_names[@]} " =~ " ${image_name} " ]]; then
+      image_names+=("$image_name")
+    fi
+  done
+  echo "${image_names[*]}"
+}
+
 function build_and_push() {
   local build_cmd=$BUILD_CMD
 
@@ -81,9 +92,10 @@ function build_and_push() {
 
   # Conditionally push the images based on the 'push' input
   if [[ "$INPUT_PUSH" == "true" ]]; then
-    for tag in "${TAGS[@]}"; do
-      echo "Pushing Docker image: $tag"
-      docker push "$tag"
+    image_names="$(get_image_names)"
+    for image_name in "${image_names[@]}"; do
+      echo "Pushing Docker image: $image_name"
+      docker push -a "$image_name"
     done
   else
     echo "Skipping Docker image push."
